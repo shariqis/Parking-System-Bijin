@@ -1,0 +1,85 @@
+{% extends 'mall/shared/base.html' %}
+{% load static %}
+{% block name %}{{ uname }}{% endblock name %}
+
+{% block content %}
+<div class="sp-page-header">
+  <h1>Booking History</h1>
+  <div class="sp-header-line"></div>
+</div>
+
+<!-- Date filter -->
+<div class="sp-card" style="margin-bottom:20px;max-width:480px;">
+  <div class="sp-card-title">Filter by Date</div>
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="form-field">
+      <label>Choose Date</label>
+      <input type="date" name="start_time" id="start_time" required>
+    </div>
+    <button type="submit" class="sp-btn sp-btn-primary">
+      <i class="mdi mdi-magnify"></i> Search
+    </button>
+  </form>
+</div>
+
+<!-- Context info -->
+<div style="margin-bottom:14px;font-size:13px;color:var(--text-muted);">
+  Showing bookings for <strong style="color:var(--blue);">{{ user.username }}</strong>'s mall
+  {% if today %} on <strong style="color:var(--text-main);">{{ today }}</strong>{% endif %}
+</div>
+
+<div class="sp-card">
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Slot #</th>
+          <th>Booked By</th>
+          <th>Vehicle Type</th>
+          <th>Booked At</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if bookings %}
+          {% for booking in bookings %}
+          <tr>
+            <td><span class="sp-badge sp-badge-blue">{{ booking.parking_slot__slot_number }}</span></td>
+            <td><strong>{{ booking.user__username }}</strong></td>
+            <td>{{ booking.parking_slot__vehicle_type }}</td>
+            <td style="color:var(--text-muted);font-size:12px;">{{ booking.created_at }}</td>
+            <td style="font-size:12px;">{{ booking.start_time }}</td>
+            <td style="font-size:12px;">{{ booking.end_time }}</td>
+            <td>
+              {% if booking.status == 'reserved' %}
+                <span class="sp-badge sp-badge-warn">Reserved</span>
+              {% elif booking.status == 'Occupied' %}
+                <span class="sp-badge sp-badge-blue">Occupied</span>
+              {% elif booking.status == 'Paid' %}
+                <span class="sp-badge sp-badge-green">Paid</span>
+              {% elif booking.status == 'completed' %}
+                <span class="sp-badge sp-badge-green">Completed</span>
+              {% elif booking.status == 'cancelled' %}
+                <span class="sp-badge sp-badge-red">Cancelled</span>
+              {% else %}
+                <span class="sp-badge sp-badge-blue">{{ booking.status }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="7" style="text-align:center;padding:40px 20px;color:var(--text-muted);">
+              <i class="mdi mdi-calendar-blank" style="font-size:32px;display:block;margin-bottom:8px;color:rgba(79,141,255,0.2);"></i>
+              No bookings found for this day.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

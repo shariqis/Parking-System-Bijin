@@ -1,0 +1,28 @@
+{% extends 'admin/shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>Edit Location</h1>
+  <div class="sp-header-line"></div>
+</div>
+<div style="max-width:500px;">
+  <div class="sp-card">
+    <div class="sp-card-title">Editing Location</div>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-field">
+        {{ form.location.label_tag }}
+        {{ form.location }}
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button type="submit" class="sp-btn sp-btn-primary">
+          <i class="mdi mdi-content-save"></i> Save Changes
+        </button>
+        <a href="{% url 'view_locations' %}" class="sp-btn sp-btn-secondary">
+          <i class="mdi mdi-close"></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

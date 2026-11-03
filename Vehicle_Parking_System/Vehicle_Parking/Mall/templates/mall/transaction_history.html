@@ -1,0 +1,60 @@
+{% extends 'mall/shared/base.html' %}
+{% load static %}
+{% block name %}{{ uname }}{% endblock name %}
+
+{% block content %}
+<div class="sp-page-header">
+  <h1>Transaction History</h1>
+  <div class="sp-header-line"></div>
+</div>
+
+<div style="margin-bottom:16px;font-size:13px;color:var(--text-muted);">
+  All completed transactions for <strong style="color:var(--blue);">{{ user.username }}</strong>'s mall
+</div>
+
+<div class="sp-card">
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Slot #</th>
+          <th>Booked By</th>
+          <th>Vehicle Type</th>
+          <th>Booked At</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Paid At</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if bookings %}
+          {% for booking in bookings %}
+          <tr>
+            <td><span class="sp-badge sp-badge-blue">{{ booking.parking_slot__slot_number }}</span></td>
+            <td><strong>{{ booking.user__username }}</strong></td>
+            <td>{{ booking.parking_slot__vehicle_type }}</td>
+            <td style="color:var(--text-muted);font-size:12px;">{{ booking.created_at }}</td>
+            <td style="font-size:12px;">{{ booking.start_time }}</td>
+            <td style="font-size:12px;">{{ booking.end_time }}</td>
+            <td style="font-size:12px;color:var(--text-muted);">{{ booking.updated_at }}</td>
+            <td>
+              <strong style="color:var(--teal);font-family:'Rajdhani',sans-serif;font-size:16px;">
+                ₹ {{ booking.paid_amount }}
+              </strong>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="8" style="text-align:center;padding:40px 20px;color:var(--text-muted);">
+              <i class="mdi mdi-cash-remove" style="font-size:32px;display:block;margin-bottom:8px;color:rgba(79,141,255,0.2);"></i>
+              No transactions to display.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

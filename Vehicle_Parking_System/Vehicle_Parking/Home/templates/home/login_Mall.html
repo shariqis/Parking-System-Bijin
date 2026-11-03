@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>SMARTPARK — Mall Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static '/assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static '/assets/vendors/css/vendor.bundle.base.css' %}">
+  <link rel="stylesheet" href="{% static '/assets/css/style.css' %}">
+  <link rel="shortcut icon" href="{% static '/assets/images/favicon.png' %}" />
+  <style>
+    :root {
+      --black: #0a0a0c; --dark: #111116; --panel: #17171f;
+      --amber: #f5a623; --amber-dim: #c4831a;
+      --white: #f0ede8; --muted: #7a7a8a;
+      --border: rgba(245,166,35,0.15); --border-subtle: rgba(255,255,255,0.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Outfit', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; }
+
+    /* NAVBAR */
+    .sp-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center;
+      padding: 0 40px; height: 64px;
+      background: rgba(10,10,12,0.95);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sp-nav .brand {
+      font-family: 'Bebas Neue', sans-serif; font-size: 26px;
+      letter-spacing: 4px; color: var(--amber);
+      text-decoration: none; margin-right: auto;
+    }
+    .sp-nav .brand span { color: var(--white); }
+    .sp-contact {
+      display: flex; align-items: center; gap: 20px;
+      font-size: 12px; color: var(--muted);
+      border-left: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      padding: 0 24px; margin: 0 24px;
+    }
+    .sp-contact .c-item { display: flex; align-items: center; gap: 6px; }
+    .nav-links { display: flex; align-items: center; gap: 6px; }
+    .nav-links a {
+      padding: 7px 14px; font-size: 13px; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      border-radius: 6px; transition: all 0.18s; white-space: nowrap;
+    }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown > a {
+      display: flex; align-items: center; gap: 4px;
+      padding: 7px 14px; font-size: 13px; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      border-radius: 6px; transition: all 0.18s; cursor: pointer;
+    }
+    .nav-dropdown > a::after { content: '▾'; font-size: 10px; }
+    .nav-dropdown:hover > a { color: var(--white); background: rgba(255,255,255,0.05); }
+    .dropdown-menu-sp {
+      position: absolute; top: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; min-width: 160px; padding: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s, transform 0.18s; z-index: 200;
+    }
+    .nav-dropdown:hover .dropdown-menu-sp {
+      opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0);
+    }
+    .dropdown-menu-sp a {
+      display: block; padding: 9px 14px; font-size: 13px; color: var(--muted);
+      text-decoration: none; border-radius: 6px; transition: all 0.15s;
+    }
+    .dropdown-menu-sp a:hover { color: var(--amber); background: rgba(245,166,35,0.08); }
+    .nav-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 18px; background: var(--amber); color: var(--black);
+      font-size: 13px; font-weight: 600; border: none; border-radius: 6px;
+      text-decoration: none; cursor: pointer; transition: background 0.18s; margin-left: 8px;
+    }
+    .nav-btn:hover { background: var(--amber-dim); color: var(--black); }
+
+    /* LOGIN LAYOUT */
+    .login-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      padding-top: 64px;
+    }
+
+    /* LEFT PANEL */
+    .login-left {
+      background: var(--dark);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 60px;
+    }
+    .login-left .bg-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    .login-left .glow {
+      position: absolute;
+      top: -150px; left: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(245,166,35,0.1) 0%, transparent 65%);
+    }
+    .login-left-content { position: relative; z-index: 2; }
+    .login-role-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px;
+      background: rgba(245,166,35,0.1);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 20px;
+    }
+    .login-left h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 72px; line-height: 0.9;
+      letter-spacing: 2px; color: var(--white);
+      margin-bottom: 20px;
+    }
+    .login-left h2 .amber { color: var(--amber); display: block; }
+    .login-left p {
+      font-size: 15px; font-weight: 300;
+      color: var(--muted); line-height: 1.7;
+      max-width: 400px;
+    }
+    .login-left-links {
+      display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap;
+    }
+    .left-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 20px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px; color: var(--muted);
+      font-size: 13px; text-decoration: none;
+      transition: all 0.18s;
+    }
+    .left-link:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* RIGHT PANEL */
+    .login-right {
+      background: var(--panel);
+      border-left: 1px solid var(--border-subtle);
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 60px 48px;
+    }
+    .login-right .form-header { margin-bottom: 36px; }
+    .login-right .form-header .step {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 10px;
+    }
+    .login-right .form-header h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 38px; letter-spacing: 1px;
+      color: var(--white);
+    }
+    .form-field { margin-bottom: 20px; }
+    .form-field label {
+      display: block; font-size: 11px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .form-field input {
+      width: 100%; padding: 13px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px; color: var(--white);
+      font-family: 'Outfit', sans-serif; font-size: 14px;
+      outline: none; transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    .form-field input:focus {
+      border-color: rgba(245,166,35,0.5);
+      box-shadow: 0 0 0 3px rgba(245,166,35,0.08);
+    }
+    .form-field input::placeholder { color: var(--muted); }
+    .submit-btn {
+      width: 100%; padding: 15px;
+      background: var(--amber); color: var(--black);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px; letter-spacing: 2px;
+      border: none; border-radius: 8px;
+      cursor: pointer; transition: all 0.18s;
+      margin-top: 8px; margin-bottom: 24px;
+    }
+    .submit-btn:hover { background: var(--amber-dim); transform: translateY(-1px); }
+    .form-divider {
+      text-align: center; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--muted); margin-bottom: 16px;
+      position: relative;
+    }
+    .form-divider::before, .form-divider::after {
+      content: ''; position: absolute; top: 50%;
+      width: 40%; height: 1px; background: var(--border-subtle);
+    }
+    .form-divider::before { left: 0; }
+    .form-divider::after { right: 0; }
+    .register-links {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .reg-link {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 11px 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px; color: var(--muted);
+      font-size: 12px; text-decoration: none;
+      transition: all 0.18s; text-align: center;
+    }
+    .reg-link:hover { border-color: var(--amber); color: var(--amber); background: rgba(245,166,35,0.05); }
+
+    @media (max-width: 900px) {
+      .login-page { grid-template-columns: 1fr; }
+      .login-left { min-height: 280px; padding: 40px; }
+      .login-left h2 { font-size: 50px; }
+      .login-right { padding: 40px 28px; }
+      .sp-contact { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sp-nav">
+    <a class="brand" href="#">SMART<span>PARK</span></a>
+    <div class="sp-contact">
+      <span class="c-item"><i class="mdi mdi-phone"></i> 2352637236782</span>
+      <span class="c-item"><i class="mdi mdi-email"></i> smartparking948@gmail.com</span>
+    </div>
+    <div class="nav-links">
+      <a href="{% url 'about' %}">Home</a>
+      <a href="{% url 'service' %}">Services</a>
+      <div class="nav-dropdown">
+        <a>Register</a>
+        <div class="dropdown-menu-sp">
+          <a href="{% url 'Mall_register' %}">Mall Register</a>
+          <a href="{% url 'register' %}">User Register</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <a>Login</a>
+        <div class="dropdown-menu-sp">
+          <a href="{% url 'SignIn_Admin' %}">Admin</a>
+          <a href="{% url 'SignIn_Mall' %}">Mall</a>
+          <a href="{% url 'SignIn_Supervisor' %}">Supervisor</a>
+          <a href="{% url 'SignIn_User' %}">User</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="login-page">
+    <!-- LEFT -->
+    <div class="login-left">
+      <div class="bg-grid"></div>
+      <div class="glow"></div>
+      <div class="login-left-content">
+        <div class="login-role-badge"><i class="mdi mdi-store"></i> Mall Portal</div>
+        <h2>Admin<span class="amber">Portal.</span></h2>
+        <p>Manage your mall's parking operations. View bookings, configure slots, set pricing, and monitor real-time occupancy.</p>
+        <div class="login-left-links">
+          <a href="{% url 'register' %}" class="left-link"><i class="mdi mdi-account-plus"></i> User Register</a>
+          <a href="{% url 'Mall_register' %}" class="left-link"><i class="mdi mdi-store-plus"></i> Mall Register</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="login-right">
+      <div class="form-header">
+        <div class="step">Step 1 of 1</div>
+        <h3>Sign In as Mall</h3>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-field">
+          <label>Username</label>
+          <input type="text" name="username" required placeholder="Enter your username">
+        </div>
+        <div class="form-field">
+          <label>Password</label>
+          <input type="password" name="password" required placeholder="Enter your password">
+        </div>
+        <button type="submit" class="submit-btn">Login →</button>
+      </form>
+      <div class="form-divider">or register</div>
+      <div class="register-links">
+        <a href="{% url 'register' %}" class="reg-link"><i class="mdi mdi-account"></i> User Register</a>
+        <a href="{% url 'Mall_register' %}" class="reg-link"><i class="mdi mdi-store"></i> Mall Register</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static '/assets/vendors/js/vendor.bundle.base.js' %}"></script>
+  <script src="{% static '/assets/js/misc.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends 'supervisor/shared/base.html' %}
+{% load static %}
+{% block name %}{{ uname }}{% endblock name %}
+
+{% block styles %}
+<style>
+  .qr-panel {
+    max-width: 560px;
+  }
+  .qr-data-box {
+    background: rgba(167,139,250,0.05);
+    border: 1px solid rgba(167,139,250,0.18);
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-family: 'DM Sans', monospace;
+    font-size: 13px;
+    color: var(--teal);
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin-bottom: 22px;
+    max-height: 280px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  .qr-data-box::-webkit-scrollbar { width: 4px; }
+  .qr-data-box::-webkit-scrollbar-thumb { background: rgba(167,139,250,0.2); border-radius: 2px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sp-page-header">
+  <h1>Mark Parking</h1>
+  <div class="sp-header-line"></div>
+</div>
+
+<div class="qr-panel">
+  <div class="sp-card">
+    <div class="sp-card-title" style="color:var(--purple);">
+      <i class="mdi mdi-qrcode-scan" style="margin-right:8px;"></i> QR Code Data
+    </div>
+    <div class="qr-data-box">{{ data }}</div>
+    <a href="{% url 'Occupied' id %}" class="sp-btn sp-btn-warning">
+      <i class="mdi mdi-car"></i> Mark as Occupied
+    </a>
+  </div>
+</div>
+{% endblock content %}

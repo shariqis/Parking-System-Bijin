@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SmartPark — Map Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --navy: #080e1f;
+      --navy-mid: #0d1630;
+      --teal: #00e5c0;
+      --teal-dim: #00b89a;
+      --accent: #4f8dff;
+      --text-main: #e8edf7;
+      --text-muted: #7a8bab;
+      --border: rgba(0,229,192,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text-main);
+    }
+
+    .layout {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* SIDEBAR PANEL */
+    .side-panel {
+      width: 300px;
+      flex-shrink: 0;
+      background: var(--navy-mid);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+    .side-panel-header {
+      padding: 22px 22px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .side-panel-logo {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 3px;
+    }
+    .side-panel-logo span { color: var(--text-main); }
+    .side-panel-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    .side-panel-body {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .panel-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .instruction-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .instruction-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .instruction-step:last-child { margin-bottom: 0; }
+    .step-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(0,229,192,0.12);
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .district-display {
+      background: rgba(0,229,192,0.05);
+      border: 1px solid rgba(0,229,192,0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .district-display .label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .district-display .value { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 600; color: var(--teal); }
+    #mall-list { list-style: none; }
+    #mall-list li {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.16s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #mall-list li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex-shrink: 0;
+    }
+    #mall-list li:hover {
+      background: rgba(0,229,192,0.06);
+      border-color: rgba(0,229,192,0.3);
+      color: var(--teal);
+    }
+    #mall-list .no-malls {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-align: center;
+      padding: 16px;
+    }
+
+    /* MAP */
+    .map-container { flex: 1; position: relative; }
+    #map { height: 100%; width: 100%; }
+
+    /* Custom Leaflet popup */
+    .leaflet-popup-content-wrapper {
+      background: var(--navy-mid) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5) !important;
+      color: var(--text-main) !important;
+      font-family: 'DM Sans', sans-serif !important;
+    }
+    .leaflet-popup-tip { background: var(--navy-mid) !important; }
+    .leaflet-popup-content { font-size: 13px !important; }
+
+    @media (max-width: 700px) {
+      .side-panel { width: 100%; height: 240px; border-right: none; border-bottom: 1px solid var(--border); }
+      .layout { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+
+    <!-- SIDE PANEL -->
+    <div class="side-panel">
+      <div class="side-panel-header">
+        <div class="side-panel-logo">SMART<span>PARK</span></div>
+        <div class="side-panel-sub">Map Booking</div>
+      </div>
+      <div class="side-panel-body">
+        <div class="panel-label">How it works</div>
+        <div class="instruction-card">
+          <div class="instruction-step">
+            <div class="step-num">1</div>
+            <div>Click anywhere on the map to select a district</div>
+          </div>
+          <div class="instruction-step">
+            <div class="step-num">2</div>
+            <div>Nearby malls will appear on the map and in this panel</div>
+          </div>
+          <div class="instruction-step">
+            <div class="step-num">3</div>
+            <div>Click a mall marker to select it for booking</div>
+          </div>
+        </div>
+
+        <div class="district-display" id="district-display" style="display:none;">
+          <div class="label">Selected District</div>
+          <div class="value" id="district-name">—</div>
+        </div>
+
+        <div class="panel-label" id="malls-label" style="display:none;">Malls in Area</div>
+        <ul id="mall-list"></ul>
+      </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+
+  </div>
+
+  <script>
+    var map = L.map('map').setView([9.967, 76.290], 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var currentMarker = null;
+
+    function getPlaceName(lat, lon, callback) {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+      fetch(url).then(r => r.json()).then(data => {
+        if (data && data.address) {
+          const { town, village, suburb } = data.address;
+          callback(town || village || suburb || 'Unknown Place');
+        } else {
+          callback('Location name not found');
+        }
+      }).catch(() => callback('Error retrieving location name'));
+    }
+
+    function getDistrictName(lat, lon, callback) {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+      fetch(url).then(r => r.json()).then(data => {
+        if (data && data.address) {
+          callback(data.address.state_district || 'District not found');
+        } else {
+          callback('District not found');
+        }
+      }).catch(() => callback('Error retrieving district name'));
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        map.setView([latitude, longitude], 13);
+        getPlaceName(latitude, longitude, function(placeName) {
+          currentMarker = L.marker([latitude, longitude]).addTo(map)
+            .bindPopup(`<strong>${placeName}</strong><br><small>Your Location</small>`).openPopup();
+        });
+      }, function(error) {
+        console.error("Geolocation error: " + error.message);
+      });
+    }
+
+    function getMallsByDistrict(district) {
+      const malls = {
+        "Thiruvananthapuram": [
+          { id: 1, name: "Mall of Travancore", lat: 8.515278, lon: 76.898611 },
+          { id: 2, name: "LuLu Mall", lat: 8.51528, lon: 76.89861 }
+        ],
+        "Ernakulam": [
+          { id: 3, name: "LuLu Mall", lat: 10.026617, lon: 76.3087 },
+          { id: 4, name: "Oberon Mall", lat: 10.008667, lon: 76.307333 },
+          { id: 5, name: "Forum Mall", lat: 9.939664, lon: 76.310944 },
+          { id: 6, name: "Centre Square Mall", lat: 9.9816, lon: 76.2825 }
+        ],
+        "Kozhikode": [
+          { name: "Forum Mall Kozhikode", lat: 11.2556, lon: 75.7684 },
+          { name: "City Centre Mall", lat: 11.2568, lon: 75.7772 }
+        ],
+        "Kottayam": [
+          { name: "Mall of Joy", lat: 9.5915, lon: 76.5222 },
+          { name: "LuLu Mall", lat: 9.5915, lon: 76.5222 }
+        ],
+        "Pathanamthitta": [{ name: "Mall Grande", lat: 9.2644, lon: 76.7872 }],
+        "Alappuzha": [{ name: "Reliance Mall Alleppey", lat: 9.4981, lon: 76.3388 }],
+        "Kollam": [
+          { name: "RP Mall Kollam", lat: 8.885347, lon: 76.590759 },
+          { name: "H & J Mall Karunagappally", lat: 9.058000, lon: 76.519400 },
+          { name: "Bishop Jerome Commercial Complex", lat: 8.885347, lon: 76.590759 },
+          { name: "Mall of Joy", lat: 8.885347, lon: 76.590759 },
+          { name: "D Mall", lat: 8.885347, lon: 76.590759 }
+        ],
+        "Thrissur": [
+          { name: "Sobha City Mall", lat: 10.517096, lon: 76.212578 },
+          { name: "Selex Mall", lat: 10.527642, lon: 76.214434 },
+          { name: "HiLITE Mall Thrissur", lat: 10.527642, lon: 76.214434 }
+        ],
+        "Palakkad": [
+          { name: "LuLu Mall", lat: 10.786730, lon: 76.654793 },
+          { name: "Jobys Mall", lat: 10.786730, lon: 76.654793 }
+        ],
+        "Malappuram": [
+          { name: "Forum Center: Shopping Mall", lat: 11.042900, lon: 76.071100 },
+          { name: "VAVAS Mall", lat: 11.042900, lon: 76.071100 }
+        ],
+        "Wayanad": [
+          { name: "Mint Mall", lat: 11.685400, lon: 76.132000 },
+          { name: "Gokulam Galleria", lat: 11.685400, lon: 76.132000 }
+        ],
+        "Kannur": [
+          { name: "Capitol Mall", lat: 11.874500, lon: 75.370400 },
+          { name: "Kannur Central, Mall of Emad", lat: 11.874500, lon: 75.370400 },
+          { name: "City Centre, Kannur", lat: 11.874500, lon: 75.370400 }
+        ],
+        "Kasaragod": [{ name: "Square Nine Mall", lat: 12.498400, lon: 74.989600 }]
+      };
+      return malls[district] || [];
+    }
+
+    let mallMarkers = [];
+    var mallId = 0;
+
+    map.on('click', function(e) {
+      let lat = e.latlng.lat;
+      let lon = e.latlng.lng;
+
+      if (currentMarker) map.removeLayer(currentMarker);
+
+      getPlaceName(lat, lon, function(placeName) {
+        currentMarker = L.marker([lat, lon]).addTo(map)
+          .bindPopup(`<strong>${placeName}</strong>`).openPopup();
+      });
+
+      getDistrictName(lat, lon, function(districtName) {
+        // Update panel
+        document.getElementById('district-display').style.display = 'block';
+        document.getElementById('district-name').textContent = districtName;
+        document.getElementById('malls-label').style.display = 'block';
+
+        mallMarkers.forEach(m => map.removeLayer(m));
+        mallMarkers = [];
+
+        const malls = getMallsByDistrict(districtName);
+        const mallList = document.getElementById('mall-list');
+        mallList.innerHTML = '';
+
+        if (malls.length > 0) {
+          malls.forEach(mall => {
+            const marker = L.marker([mall.lat, mall.lon]).addTo(map)
+              .bindPopup(`<strong>${mall.name}</strong>`)
+              .on('click', function() {
+                mallId = mall.id;
+              });
+            mallMarkers.push(marker);
+
+            const li = document.createElement('li');
+            li.textContent = mall.name;
+            li.addEventListener('click', function() {
+              map.setView([mall.lat, mall.lon], 15);
+              marker.openPopup();
+            });
+            mallList.appendChild(li);
+          });
+        } else {
+          mallList.innerHTML = '<li class="no-malls">No malls found in this district.</li>';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

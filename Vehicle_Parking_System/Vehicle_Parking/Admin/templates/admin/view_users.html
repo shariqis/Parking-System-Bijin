@@ -1,0 +1,35 @@
+{% extends 'admin/shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>User List</h1>
+  <div class="sp-header-line"></div>
+</div>
+<div class="sp-card">
+  {% if not users %}
+    <div class="sp-empty">
+      <i class="mdi mdi-account-off"></i>
+      <p>No registered users found.</p>
+    </div>
+  {% else %}
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td><strong>{{ user.username }}</strong></td>
+          <td style="color:var(--text-muted);">{{ user.email }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

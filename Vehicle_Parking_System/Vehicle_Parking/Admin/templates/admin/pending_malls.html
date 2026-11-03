@@ -1,0 +1,43 @@
+{% extends 'admin/shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>Pending Mall Approvals</h1>
+  <div class="sp-header-line"></div>
+</div>
+<div class="sp-card">
+  {% if not users %}
+    <div class="sp-empty">
+      <i class="mdi mdi-store-check"></i>
+      <p>No malls pending verification.</p>
+    </div>
+  {% else %}
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Mall Name</th>
+          <th>Location</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Approve</th>
+          <th>Reject</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td><strong style="color:var(--teal);">{{ user.mall.first_name }}</strong></td>
+          <td>{{ user.loc_id.location }}</td>
+          <td>{{ user.mall.username }}</td>
+          <td style="color:var(--text-muted);">{{ user.mall.email }}</td>
+          <td><a href="{% url 'approve_mall' user.mall.id %}" class="sp-btn-approve"><i class="mdi mdi-check"></i> Approve</a></td>
+          <td><a href="{% url 'reject_mall' user.mall.id %}" class="sp-btn-reject"><i class="mdi mdi-close"></i> Reject</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

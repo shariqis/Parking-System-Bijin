@@ -1,0 +1,39 @@
+{% extends 'admin/shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>View Malls</h1>
+  <div class="sp-header-line"></div>
+</div>
+<div class="sp-card">
+  {% if not users %}
+    <div class="sp-empty">
+      <i class="mdi mdi-store-off"></i>
+      <p>No malls to display.</p>
+    </div>
+  {% else %}
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Mall Name</th>
+          <th>Location</th>
+          <th>Username</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td><strong style="color:var(--teal);">{{ user.mall.first_name }}</strong></td>
+          <td>{{ user.loc_id.location }}</td>
+          <td>{{ user.mall.username }}</td>
+          <td style="color:var(--text-muted);">{{ user.mall.email }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

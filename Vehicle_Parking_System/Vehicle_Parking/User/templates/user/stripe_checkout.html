@@ -1,0 +1,170 @@
+{% extends 'user/shared/base.html' %}
+{% load static %}
+
+{% block styles %}
+<style>
+  .recharge-wrapper {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .recharge-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .recharge-card::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(0,229,192,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .recharge-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: rgba(0,229,192,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    color: var(--teal);
+    margin-bottom: 18px;
+  }
+  .recharge-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .recharge-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+  .field-group { margin-bottom: 18px; }
+  .disabled-field {
+    opacity: 0.6;
+  }
+  .disabled-field .sp-input {
+    cursor: not-allowed;
+    background: rgba(255,255,255,0.02);
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--teal);
+    color: var(--navy);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .submit-btn:hover {
+    background: var(--teal-dim);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0,229,192,0.3);
+  }
+  .payment-section {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .payment-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--teal);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sp-page-header">
+  <h1>Recharge Wallet</h1>
+  <div class="header-line"></div>
+</div>
+
+<div class="recharge-wrapper">
+  <div class="recharge-card">
+    <div class="recharge-icon"><i class="mdi mdi-wallet-plus"></i></div>
+    <div class="recharge-title">Add Funds</div>
+    <div class="recharge-sub">Top up your SmartPark wallet to book parking slots.</div>
+
+    <div id="app">
+      <form class="m" method="post">
+        {% csrf_token %}
+        <div class="field-group disabled-field">
+          <label class="sp-label">Username</label>
+          <input name="name" type="text" class="sp-input" disabled value="{{ name|escape }}">
+        </div>
+        <div class="field-group disabled-field">
+          <label class="sp-label">Email Address</label>
+          <input type="email" class="sp-input" name="email" disabled value="{{ email|escape }}">
+        </div>
+        <div class="field-group">
+          <label class="sp-label">Recharge Amount (₹)</label>
+          <input type="number" class="sp-input" name="amount" value="{{ price|escape }}" placeholder="Enter amount">
+        </div>
+        <button class="submit-btn" type="submit">
+          <i class="mdi mdi-credit-card-plus"></i>
+          Proceed to Recharge
+        </button>
+      </form>
+    </div>
+
+    {% if payment %}
+    <div class="payment-section">
+      <div class="payment-title">Complete Payment</div>
+      <form action="{% url 'success' user %}" method="post" style="text-align:center;">
+        {% csrf_token %}
+        <script src="https://checkout.razorpay.com/v1/checkout.js"
+          data-key="rzp_test_ifqXZb84qSL1CP"
+          data-amount="{{ payment.amount }}*100"
+          data-currency="INR"
+          data-order_id="{{ payment.id }}"
+          data-buttontext="Pay with Razorpay"
+          data-name="Parking Slot"
+          data-description="Thanks for Payment."
+          data-image="https://example.com/your_logo.jpg"
+          data-prefill.name="{{ name|escape }}"
+          data-prefill.email="{{ email|escape }}"
+          data-prefill.contact="{{ contact|escape }}"
+          data-theme.color="#00e5c0">
+        </script>
+        <input type="hidden" name="hidden" value="custom_value">
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    delimiters: ['[[', ']]'],
+    el: '#app',
+    data: { message: 'Hello Vue!', name: null, amount: null },
+    methods: {
+      greet: function(name) { console.log('Hello from ' + name + '!') },
+      get: function() { console.log(this.name, this.amount) }
+    },
+    watch: { amount() { console.log(this.amount) } }
+  });
+</script>
+{% endblock %}

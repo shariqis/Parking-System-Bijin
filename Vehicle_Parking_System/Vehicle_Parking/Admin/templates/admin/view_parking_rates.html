@@ -1,0 +1,45 @@
+{% extends 'mall/shared/base.html' %}
+{% load static %}
+{% block name %}{{ uname }}{% endblock name %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>Parking Rates</h1>
+  <div class="sp-header-line"></div>
+  <a href="{% url 'set_parking_rates' %}" class="sp-btn sp-btn-primary" style="flex-shrink:0;">
+    <i class="mdi mdi-plus"></i> Add Rate
+  </a>
+</div>
+<div class="sp-card">
+  {% if not rates %}
+    <div class="sp-empty">
+      <i class="mdi mdi-currency-inr"></i>
+      <p>No parking rates configured yet.</p>
+    </div>
+  {% else %}
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Vehicle Type</th>
+          <th>Rate / Hour</th>
+          <th>Rate / Day</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rate in rates %}
+        <tr>
+          <td><strong style="color:var(--mall-color);">{{ rate.vehicle_type }}</strong></td>
+          <td>₹ {{ rate.rate_per_hour }}</td>
+          <td>₹ {{ rate.rate_per_day }}</td>
+          <td><a href="{% url 'edit_parking_rates' rate.pk %}" class="sp-btn sp-btn-sm sp-btn-warning"><i class="mdi mdi-pencil"></i> Edit</a></td>
+          <td><a href="{% url 'delete_parking_rates' rate.pk %}" class="sp-btn sp-btn-sm sp-btn-danger"><i class="mdi mdi-delete"></i> Delete</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

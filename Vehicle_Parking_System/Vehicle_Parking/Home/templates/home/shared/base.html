@@ -1,0 +1,471 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>SMARTPARK | Home</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static '/css/open-iconic-bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static '/css/animate.css' %}">
+  <link rel="stylesheet" href="{% static '/css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static '/css/owl.theme.default.min.css' %}">
+  <link rel="stylesheet" href="{% static '/css/magnific-popup.css' %}">
+  <link rel="stylesheet" href="{% static '/css/aos.css' %}">
+  <link rel="stylesheet" href="{% static '/css/ionicons.min.css' %}">
+  <link rel="stylesheet" href="{% static '/css/bootstrap-datepicker.css' %}">
+  <link rel="stylesheet" href="{% static '/css/jquery.timepicker.css' %}">
+  <link rel="stylesheet" href="{% static '/css/flaticon.css' %}">
+  <link rel="stylesheet" href="{% static '/css/icomoon.css' %}">
+  <link rel="stylesheet" href="{% static '/css/style.css' %}">
+
+  <style>
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --black:          #0a0a0c;
+      --dark:           #111116;
+      --panel:          #17171f;
+      --amber:          #f5a623;
+      --amber-dim:      #c4831a;
+      --amber-faint:    rgba(245,166,35,0.08);
+      --white:          #f0ede8;
+      --muted:          #7a7a8a;
+      --border:         rgba(245,166,35,0.15);
+      --border-subtle:  rgba(255,255,255,0.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    #ftco-navbar {
+      position: fixed !important;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: 64px;
+      background: rgba(10,10,12,0.95) !important;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+    }
+    #ftco-navbar .container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      padding: 0;
+    }
+    #ftco-navbar .navbar-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 4px;
+      color: var(--amber) !important;
+      text-decoration: none;
+      margin-right: auto;
+    }
+    #ftco-navbar .navbar-brand span { color: var(--white); }
+
+    /* ── HERO ── */
+    .hero-wrap {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding-top: 64px;
+    }
+    .hero-wrap .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(10,10,12,0.92) 0%,
+        rgba(10,10,12,0.75) 50%,
+        rgba(10,10,12,0.88) 100%
+      );
+      z-index: 1;
+    }
+    .hero-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero-wrap::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(245,166,35,0.1) 0%, transparent 65%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero-wrap .container {
+      position: relative;
+      z-index: 3;
+    }
+    .hero-wrap .slider-text {
+      min-height: 80vh;
+    }
+    .hero-wrap .text h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 9vw, 110px);
+      line-height: 0.92;
+      letter-spacing: 2px;
+      color: var(--white);
+    }
+    .hero-wrap .text h1 em {
+      color: var(--amber);
+      font-style: normal;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 18px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--amber);
+    }
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
+    .btn-sp-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 30px;
+      background: var(--amber); color: var(--black);
+      font-weight: 600; font-size: 14px;
+      border-radius: 6px; text-decoration: none; border: none;
+      cursor: pointer; transition: background 0.18s, transform 0.18s;
+    }
+    .btn-sp-primary:hover {
+      background: var(--amber-dim); color: var(--black); transform: translateY(-2px);
+    }
+    .btn-sp-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 30px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white); font-weight: 500; font-size: 14px;
+      border-radius: 6px; text-decoration: none;
+      cursor: pointer; transition: all 0.18s;
+    }
+    .btn-sp-outline:hover { border-color: var(--amber); color: var(--amber); }
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 56px; flex-wrap: wrap;
+    }
+    .hero-stat .num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 38px; color: var(--amber);
+      letter-spacing: 1px; line-height: 1;
+    }
+    .hero-stat .lbl {
+      font-size: 11px; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-top: 3px;
+    }
+
+    /* ── TICKER ── */
+    .sp-ticker {
+      background: var(--amber);
+      padding: 10px 0;
+      overflow: hidden;
+    }
+    .sp-ticker-inner {
+      display: flex; gap: 56px;
+      width: max-content;
+      animation: sp-tick 20s linear infinite;
+    }
+    .sp-ticker-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px; letter-spacing: 3px;
+      color: var(--black); white-space: nowrap;
+      display: flex; align-items: center; gap: 18px;
+    }
+    .sp-ticker-item::after { content: '◆'; font-size: 7px; }
+    @keyframes sp-tick {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── CONTENT SECTION ── */
+    .ftco-section {
+      padding: 80px 0;
+      background: var(--black);
+    }
+    .ftco-section .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ── FOOTER ── */
+    .ftco-footer {
+      background: var(--dark) !important;
+      border-top: 1px solid var(--border-subtle);
+      padding: 28px 40px !important;
+    }
+    .ftco-footer .container { max-width: 1200px; margin: 0 auto; }
+    .ftco-footer .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .ftco-footer p {
+      font-size: 12px !important;
+      color: var(--muted) !important;
+      margin: 0 !important;
+    }
+    .ftco-footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 3px;
+      color: var(--amber);
+    }
+
+    /* ── PAGE LOADER ── */
+    #ftco-loader { background: var(--black) !important; }
+
+    /* ── GLOBAL FORM / CARD OVERRIDES ── */
+    /* Cards used inside {% block content %} will inherit dark styling */
+    .card {
+      background: var(--panel) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 12px !important;
+      color: var(--white) !important;
+    }
+    .card-title { color: var(--white) !important; }
+
+    label {
+      color: var(--muted) !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      letter-spacing: 1.2px !important;
+      text-transform: uppercase !important;
+    }
+    .form-control {
+      background: rgba(255,255,255,0.04) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 8px !important;
+      color: var(--white) !important;
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 14px !important;
+      padding: 11px 14px !important;
+      transition: border-color 0.18s, box-shadow 0.18s !important;
+    }
+    .form-control:focus {
+      border-color: rgba(245,166,35,0.5) !important;
+      box-shadow: 0 0 0 3px rgba(245,166,35,0.08) !important;
+      outline: none !important;
+      background: rgba(255,255,255,0.05) !important;
+      color: var(--white) !important;
+    }
+    .form-control::placeholder { color: var(--muted) !important; }
+
+    .btn-primary, .enter-btn {
+      background: var(--amber) !important;
+      border-color: var(--amber) !important;
+      color: var(--black) !important;
+      font-family: 'Bebas Neue', sans-serif !important;
+      font-size: 16px !important;
+      letter-spacing: 1.5px !important;
+      padding: 12px 24px !important;
+      border-radius: 8px !important;
+      transition: background 0.18s, transform 0.18s !important;
+    }
+    .btn-primary:hover, .enter-btn:hover {
+      background: var(--amber-dim) !important;
+      border-color: var(--amber-dim) !important;
+      transform: translateY(-1px) !important;
+    }
+    .btn-facebook {
+      background: rgba(79,141,255,0.12) !important;
+      border: 1px solid rgba(79,141,255,0.3) !important;
+      color: #4f8dff !important;
+      border-radius: 8px !important;
+      font-size: 13px !important;
+      transition: all 0.18s !important;
+    }
+    .btn-facebook:hover {
+      background: rgba(79,141,255,0.22) !important;
+      color: #4f8dff !important;
+    }
+    .btn-google {
+      background: rgba(245,166,35,0.1) !important;
+      border: 1px solid var(--border) !important;
+      color: var(--amber) !important;
+      border-radius: 8px !important;
+      font-size: 13px !important;
+      transition: all 0.18s !important;
+    }
+    .btn-google:hover {
+      background: rgba(245,166,35,0.18) !important;
+      color: var(--amber) !important;
+    }
+
+    /* login-bg used in old auth pages that still extend this base */
+    .auth.login-bg, .full-page-wrapper { background: var(--dark) !important; }
+
+    @media (max-width: 768px) {
+      #ftco-navbar { padding: 0 20px; }
+      .hero-cta { gap: 10px; }
+      .hero-stats { gap: 24px; }
+      .ftco-footer { padding: 20px 20px !important; }
+      .ftco-section .container { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="#">SMARTPARK<span></span></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+        aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="oi oi-menu"></span> Menu
+      </button>
+      <div class="collapse navbar-collapse" id="ftco-nav">
+        <ul class="navbar-nav ml-auto">
+          <!-- nav items injected by child templates if needed -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- END nav -->
+
+  <!-- HERO -->
+  <div class="hero-wrap hero-wrap-2 js-fullheight"
+       style="background-image: url('/static/images/car-2.jpg');"
+       data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row no-gutters slider-text justify-content-center align-items-center">
+        <div class="col-lg-8 ftco-animate">
+          <div class="text w-100 text-center mb-md-5 pb-md-5">
+            <div class="hero-eyebrow">Kerala's Smart Parking Solution</div>
+            <h1 class="mb-4">Fast &amp; Easy Way To <em>Park</em> Your Vehicle</h1>
+            <div class="hero-cta" style="justify-content:center;">
+              <a href="#" class="btn-sp-primary">
+                <span class="icon-car"></span> Find Parking
+              </a>
+              <a href="#" class="btn-sp-outline">Learn More</a>
+            </div>
+            <div class="hero-stats" style="justify-content:center;">
+              <div class="hero-stat">
+                <div class="num">13+</div>
+                <div class="lbl">Districts</div>
+              </div>
+              <div class="hero-stat">
+                <div class="num">50+</div>
+                <div class="lbl">Malls</div>
+              </div>
+              <div class="hero-stat">
+                <div class="num">24/7</div>
+                <div class="lbl">Support</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="sp-ticker">
+    <div class="sp-ticker-inner">
+      <span class="sp-ticker-item">Smart Parking</span>
+      <span class="sp-ticker-item">Reserve in Seconds</span>
+      <span class="sp-ticker-item">QR Code Entry</span>
+      <span class="sp-ticker-item">13 Districts</span>
+      <span class="sp-ticker-item">Real-Time Slots</span>
+      <span class="sp-ticker-item">Wallet Payments</span>
+      <span class="sp-ticker-item">Smart Parking</span>
+      <span class="sp-ticker-item">Reserve in Seconds</span>
+      <span class="sp-ticker-item">QR Code Entry</span>
+      <span class="sp-ticker-item">13 Districts</span>
+      <span class="sp-ticker-item">Real-Time Slots</span>
+      <span class="sp-ticker-item">Wallet Payments</span>
+    </div>
+  </div>
+
+  <!-- CONTENT BLOCK -->
+  <section class="ftco-section contact-section">
+    <div class="container">
+      <div class="row">
+        {% block content %}
+        {% endblock content %}
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="ftco-footer ftco-bg-dark ftco-section">
+    <div class="container">
+      <div class="row">
+        <div class="ftco-footer-brand">SMARTPARK</div>
+        <p>
+          Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+          SMARTPARK — All rights reserved
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PAGE LOADER -->
+  <div id="ftco-loader" class="show fullscreen">
+    <svg class="circular" width="48px" height="48px">
+      <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="rgba(245,166,35,0.15)"/>
+      <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f5a623"/>
+    </svg>
+  </div>
+
+  <!-- SCRIPTS — all unchanged -->
+  <script src="{% static '/js/jquery.min.js' %}"></script>
+  <script src="{% static '/js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static '/js/popper.min.js' %}"></script>
+  <script src="{% static '/js/bootstrap.min.js' %}"></script>
+  <script src="{% static '/js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static '/js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static '/js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static '/js/owl.carousel.min.js' %}"></script>
+  <script src="{% static '/js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static '/js/aos.js' %}"></script>
+  <script src="{% static '/js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static '/js/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static '/js/jquery.timepicker.min.js' %}"></script>
+  <script src="{% static '/js/scrollax.min.js' %}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="{% static '/js/google-map.js' %}"></script>
+  <script src="{% static '/js/main.js' %}"></script>
+
+</body>
+</html>

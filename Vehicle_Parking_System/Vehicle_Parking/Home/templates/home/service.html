@@ -1,0 +1,311 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>SMARTPARK — Our Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static '/assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static '/assets/vendors/css/vendor.bundle.base.css' %}">
+  <link rel="stylesheet" href="{% static '/assets/css/style.css' %}">
+  <link rel="shortcut icon" href="{% static '/assets/images/favicon.png' %}" />
+  <style>
+    :root {
+      --black: #0a0a0c; --dark: #111116; --panel: #17171f;
+      --amber: #f5a623; --amber-dim: #c4831a;
+      --white: #f0ede8; --muted: #7a7a8a;
+      --border: rgba(245,166,35,0.15); --border-subtle: rgba(255,255,255,0.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Outfit', sans-serif; background: var(--black); color: var(--white); }
+
+    /* NAVBAR */
+    .sp-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center;
+      padding: 0 40px; height: 64px;
+      background: rgba(10,10,12,0.95);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sp-nav .brand { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: var(--amber); text-decoration: none; margin-right: auto; }
+    .sp-nav .brand span { color: var(--white); }
+    .sp-contact { display: flex; align-items: center; gap: 20px; font-size: 12px; color: var(--muted); border-left: 1px solid var(--border-subtle); border-right: 1px solid var(--border-subtle); padding: 0 24px; margin: 0 24px; }
+    .sp-contact .c-item { display: flex; align-items: center; gap: 6px; }
+    .nav-links { display: flex; align-items: center; gap: 6px; }
+    .nav-links a { padding: 7px 14px; font-size: 13px; font-weight: 500; color: var(--muted); text-decoration: none; border-radius: 6px; transition: all 0.18s; white-space: nowrap; }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+    .nav-links a.active { color: var(--amber); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown > a { display: flex; align-items: center; gap: 4px; padding: 7px 14px; font-size: 13px; font-weight: 500; color: var(--muted); text-decoration: none; border-radius: 6px; transition: all 0.18s; cursor: pointer; }
+    .nav-dropdown > a::after { content: '▾'; font-size: 10px; }
+    .nav-dropdown:hover > a { color: var(--white); background: rgba(255,255,255,0.05); }
+    .dropdown-menu-sp { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(-6px); background: var(--panel); border: 1px solid var(--border); border-radius: 10px; min-width: 160px; padding: 6px; opacity: 0; pointer-events: none; transition: opacity 0.18s, transform 0.18s; z-index: 200; }
+    .nav-dropdown:hover .dropdown-menu-sp { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+    .dropdown-menu-sp a { display: block; padding: 9px 14px; font-size: 13px; color: var(--muted); text-decoration: none; border-radius: 6px; transition: all 0.15s; }
+    .dropdown-menu-sp a:hover { color: var(--amber); background: rgba(245,166,35,0.08); }
+    .nav-btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 18px; background: var(--amber); color: var(--black); font-size: 13px; font-weight: 600; border: none; border-radius: 6px; text-decoration: none; cursor: pointer; transition: background 0.18s; margin-left: 8px; }
+    .nav-btn:hover { background: var(--amber-dim); color: var(--black); }
+
+    /* PAGE */
+    .page-hero {
+      padding: 120px 40px 60px;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::before { content: ''; width: 24px; height: 1px; background: var(--amber); }
+    .page-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 7vw, 88px); line-height: 1;
+      color: var(--white); margin-bottom: 20px;
+    }
+    .page-title .amber { color: var(--amber); }
+    .page-desc { font-size: 16px; font-weight: 300; color: var(--muted); max-width: 560px; line-height: 1.8; }
+
+    /* SERVICE GRID */
+    .services-section { padding: 20px 40px 100px; max-width: 1200px; margin: 0 auto; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      margin-top: 50px;
+    }
+    .service-card {
+      background: var(--panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .service-card:hover { border-color: var(--border); transform: translateY(-4px); }
+    .service-img {
+      width: 100%; height: 220px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.8) saturate(0.7);
+      transition: filter 0.3s;
+    }
+    .service-card:hover .service-img { filter: brightness(0.9) saturate(1); }
+    .service-img-placeholder {
+      width: 100%; height: 220px;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .service-img-placeholder i { font-size: 60px; color: rgba(245,166,35,0.3); }
+    .service-body { padding: 28px; }
+    .service-tag {
+      display: inline-block; padding: 3px 10px;
+      background: rgba(245,166,35,0.1); border: 1px solid var(--border);
+      border-radius: 4px; font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 14px;
+    }
+    .service-body h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px; letter-spacing: 1px;
+      color: var(--white); margin-bottom: 10px;
+    }
+    .service-body p { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+    .service-steps { margin-top: 20px; }
+    .service-step {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 13px; color: var(--muted); line-height: 1.5;
+    }
+    .step-n {
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+      color: var(--amber); flex-shrink: 0; line-height: 1;
+      width: 24px; text-align: center;
+    }
+
+    /* HOW IT WORKS */
+    .how-section { padding: 60px 40px 100px; max-width: 1200px; margin: 0 auto; }
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2px;
+      margin-top: 48px;
+      background: var(--border-subtle);
+      border-radius: 14px; overflow: hidden;
+    }
+    .how-step {
+      background: var(--panel); padding: 32px 28px;
+      transition: background 0.2s;
+    }
+    .how-step:hover { background: #1e1e28; }
+    .how-step .icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: rgba(245,166,35,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: var(--amber);
+      margin-bottom: 18px;
+    }
+    .how-step h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px; letter-spacing: 1px;
+      color: var(--white); margin-bottom: 8px;
+    }
+    .how-step p { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+
+    /* FOOTER */
+    .sp-footer {
+      background: var(--dark); border-top: 1px solid var(--border-subtle);
+      padding: 28px 40px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .sp-footer .brand-sm { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--amber); }
+    .sp-footer p { font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 768px) {
+      .sp-contact { display: none; }
+      .page-hero, .services-section, .how-section { padding-left: 20px; padding-right: 20px; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sp-nav">
+    <a class="brand" href="#">SMART<span>PARK</span></a>
+    <div class="sp-contact">
+      <span class="c-item"><i class="mdi mdi-phone"></i> 2352637236782</span>
+      <span class="c-item"><i class="mdi mdi-email"></i> smartparking948@gmail.com</span>
+    </div>
+    <div class="nav-links">
+      <a href="{% url 'about' %}">Home</a>
+      <a href="{% url 'service' %}" class="active">Services</a>
+      <div class="nav-dropdown">
+        <a>Register</a>
+        <div class="dropdown-menu-sp">
+          <a href="{% url 'Mall_register' %}">Mall Register</a>
+          <a href="{% url 'register' %}">User Register</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <a>Login</a>
+        <div class="dropdown-menu-sp">
+          <a href="{% url 'SignIn_Admin' %}">Admin</a>
+          <a href="{% url 'SignIn_Mall' %}">Mall</a>
+          <a href="{% url 'SignIn_Supervisor' %}">Supervisor</a>
+          <a href="{% url 'SignIn_User' %}">User</a>
+        </div>
+      </div>
+      <a href="{% url 'SignIn_User' %}" class="nav-btn"><i class="mdi mdi-login"></i> Sign In</a>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="section-label">What We Offer</div>
+    <h1 class="page-title">Our <span class="amber">Services</span></h1>
+    <p class="page-desc">Everything you need to find, book, and manage parking — for drivers and mall operators alike.</p>
+  </div>
+
+  <!-- SERVICE CARDS -->
+  <div class="services-section">
+    <div class="services-grid">
+
+      <!-- Card 1: Find a Spot -->
+      <div class="service-card">
+        <div class="service-img-placeholder">
+          <img src="{% static '/assets/images/vv/s1.jpeg' %}" class="service-img" alt="Find Parking" onerror="this.style.display='none'">
+          <i class="mdi mdi-map-search" style="position:absolute;"></i>
+        </div>
+        <div class="service-body">
+          <span class="service-tag">For Drivers</span>
+          <h3>How To Find a Parking Spot</h3>
+          <p>Use our real-time map to locate available parking slots across Kerala's top malls. Filter by vehicle type, time, and location.</p>
+          <div class="service-steps">
+            <div class="service-step">
+              <div class="step-n">1</div>
+              <div>Open the SMARTPARK app and select your preferred district or mall.</div>
+            </div>
+            <div class="service-step">
+              <div class="step-n">2</div>
+              <div>Browse available slots filtered by vehicle type and time window.</div>
+            </div>
+            <div class="service-step">
+              <div class="step-n">3</div>
+              <div>Reserve your slot, pay via wallet, and receive a QR code for entry.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: List a Spot -->
+      <div class="service-card">
+        <div class="service-img-placeholder">
+          <img src="{% static '/assets/images/vv/s2.jpeg' %}" class="service-img" alt="List Parking" onerror="this.style.display='none'">
+          <i class="mdi mdi-store-plus" style="position:absolute;"></i>
+        </div>
+        <div class="service-body">
+          <span class="service-tag">For Malls</span>
+          <h3>How To Rent Your Parking Spot</h3>
+          <p>Register your mall and list your parking capacity. Set rates, manage slot availability, and earn from every booking made through SMARTPARK.</p>
+          <div class="service-steps">
+            <div class="service-step">
+              <div class="step-n">1</div>
+              <div>Register your mall and get approved by the SMARTPARK admin team.</div>
+            </div>
+            <div class="service-step">
+              <div class="step-n">2</div>
+              <div>Configure your parking slots, vehicle types, and pricing rates.</div>
+            </div>
+            <div class="service-step">
+              <div class="step-n">3</div>
+              <div>Assign supervisors, go live, and start accepting bookings immediately.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="section-label">Platform Features</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,60px);color:var(--white);margin-bottom:6px;">
+      Everything in <span style="color:var(--amber);">One Place</span>
+    </h2>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="icon"><i class="mdi mdi-map-marker-radius"></i></div>
+        <h4>Live Map</h4>
+        <p>Interactive map showing real-time slot availability across all partner malls.</p>
+      </div>
+      <div class="how-step">
+        <div class="icon"><i class="mdi mdi-qrcode-scan"></i></div>
+        <h4>QR Entry</h4>
+        <p>Receive a unique QR code for each booking. Show it at the gate for instant access.</p>
+      </div>
+      <div class="how-step">
+        <div class="icon"><i class="mdi mdi-wallet"></i></div>
+        <h4>Wallet Payments</h4>
+        <p>Top up your SMARTPARK wallet and pay for bookings seamlessly without cash.</p>
+      </div>
+      <div class="how-step">
+        <div class="icon"><i class="mdi mdi-calendar-clock"></i></div>
+        <h4>Pre-Booking</h4>
+        <p>Reserve your slot up to 24 hours in advance and cancel if your plans change.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="sp-footer">
+    <div class="brand-sm">SMARTPARK</div>
+    <p>&copy; 2024 SmartPark — Smart Parking Management System</p>
+  </footer>
+
+  <script src="{% static '/assets/vendors/js/vendor.bundle.base.js' %}"></script>
+  <script src="{% static '/assets/js/misc.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

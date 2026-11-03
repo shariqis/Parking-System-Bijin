@@ -1,0 +1,110 @@
+{% extends 'user/shared/base.html' %}
+{% load static %}
+{% block name %}{{uname}}{% endblock name %}
+
+{% block styles %}
+<style>
+  .qr-thumb {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: transform 0.2s;
+  }
+  .qr-thumb:hover { transform: scale(1.06); }
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state i {
+    font-size: 48px;
+    color: rgba(0,229,192,0.2);
+    margin-bottom: 14px;
+    display: block;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sp-page-header">
+  <h1>Upcoming Bookings</h1>
+  <div class="header-line"></div>
+</div>
+
+<div class="sp-card">
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Slot No.</th>
+          <th>Mall</th>
+          <th>Vehicle</th>
+          <th>Booked At</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Status</th>
+          <th>QR Code</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if bookings %}
+          {% for booking in bookings %}
+          <tr>
+            <td><strong style="color:var(--teal);">#{{ booking.parking_slot__slot_number }}</strong></td>
+            <td>{{ booking.parking_slot__mall__username }}</td>
+            <td>
+              <span style="display:inline-flex;align-items:center;gap:6px;">
+                {% if booking.parking_slot__vehicle_type == 'Car' %}
+                  <i class="mdi mdi-car" style="color:var(--accent);"></i>
+                {% else %}
+                  <i class="mdi mdi-motorbike" style="color:var(--warn);"></i>
+                {% endif %}
+                {{ booking.parking_slot__vehicle_type }}
+              </span>
+            </td>
+            <td class="muted">{{ booking.created_at }}</td>
+            <td>{{ booking.start_time }}</td>
+            <td>{{ booking.end_time }}</td>
+            <td>
+              {% if booking.status == 'reserved' %}
+                <span class="sp-badge sp-badge-reserved">{{ booking.status }}</span>
+              {% elif booking.status == 'completed' %}
+                <span class="sp-badge sp-badge-completed">{{ booking.status }}</span>
+              {% else %}
+                <span class="sp-badge sp-badge-cancelled">{{ booking.status }}</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="/media/{{ booking.qr_code }}" target="_blank" rel="noopener noreferrer">
+                <img class="qr-thumb" src="/media/{{ booking.qr_code }}" alt="QR Code">
+              </a>
+            </td>
+            <td>
+              {% if booking.status == 'reserved' %}
+                <a href="{% url 'Cancel_Booking' booking.id %}" class="sp-btn sp-btn-warning" style="padding:7px 14px;font-size:12px;">
+                  <i class="mdi mdi-close-circle"></i> Cancel
+                </a>
+              {% else %}
+                <span style="color:var(--text-muted);font-size:12px;">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="9">
+              <div class="empty-state">
+                <i class="mdi mdi-calendar-blank"></i>
+                <p>No upcoming bookings found.</p>
+              </div>
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

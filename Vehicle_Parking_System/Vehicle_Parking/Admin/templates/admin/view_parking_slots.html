@@ -1,0 +1,53 @@
+{% extends 'mall/shared/base.html' %}
+{% load static %}
+{% block name %}{{ uname }}{% endblock name %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>View Parking Slots</h1>
+  <div class="sp-header-line"></div>
+  <a href="{% url 'manage_parking_slots' %}" class="sp-btn sp-btn-primary" style="flex-shrink:0;">
+    <i class="mdi mdi-plus"></i> Add Slot
+  </a>
+</div>
+<div class="sp-card">
+  {% if not parking_slots %}
+    <div class="sp-empty">
+      <i class="mdi mdi-parking"></i>
+      <p>No parking slots configured yet.</p>
+    </div>
+  {% else %}
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Slot #</th>
+          <th>Vehicle Type</th>
+          <th>Location</th>
+          <th>Reserved</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for slot in parking_slots %}
+        <tr>
+          <td><span class="sp-badge sp-badge-blue">{{ slot.slot_number }}</span></td>
+          <td>{{ slot.vehicle_type }}</td>
+          <td>{{ slot.location }}</td>
+          <td>
+            {% if slot.is_reserved %}
+              <span class="sp-badge sp-badge-red">Reserved</span>
+            {% else %}
+              <span class="sp-badge sp-badge-green">Free</span>
+            {% endif %}
+          </td>
+          <td><a href="{% url 'edit_parking_slot' slot.pk %}" class="sp-btn sp-btn-sm sp-btn-warning"><i class="mdi mdi-pencil"></i> Edit</a></td>
+          <td><a href="{% url 'delete_parking_slot' slot.pk %}" class="sp-btn sp-btn-sm sp-btn-danger"><i class="mdi mdi-delete"></i> Delete</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

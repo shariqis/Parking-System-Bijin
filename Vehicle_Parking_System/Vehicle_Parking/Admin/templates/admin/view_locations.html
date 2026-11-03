@@ -1,0 +1,40 @@
+{% extends 'admin/shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>View Locations</h1>
+  <div class="sp-header-line"></div>
+  <a href="{% url 'add_locations' %}" class="sp-btn sp-btn-primary" style="flex-shrink:0;">
+    <i class="mdi mdi-plus"></i> Add New
+  </a>
+</div>
+<div class="sp-card">
+  {% if not loc %}
+    <div class="sp-empty">
+      <i class="mdi mdi-map-marker-off"></i>
+      <p>No locations to display.</p>
+    </div>
+  {% else %}
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr>
+          <th>Location</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loc in loc %}
+        <tr>
+          <td><strong style="color:var(--teal);">{{ loc.location }}</strong></td>
+          <td><a href="{% url 'edit_locations' loc.pk %}" class="sp-btn sp-btn-sm sp-btn-warning"><i class="mdi mdi-pencil"></i> Edit</a></td>
+          <td><a href="{% url 'delete_locations' loc.pk %}" class="sp-btn sp-btn-sm sp-btn-danger"><i class="mdi mdi-delete"></i> Delete</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

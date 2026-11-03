@@ -1,0 +1,74 @@
+{% extends 'mall/shared/base.html' %}
+{% load static %}
+{% block name %}{{ uname }}{% endblock name %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>Add Supervisor</h1>
+  <div class="sp-header-line"></div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start;max-width:1000px;">
+  <!-- Form -->
+  <div class="sp-card">
+    <div class="sp-card-title">New Supervisor</div>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-field">
+        <label>Name</label>
+        <input type="text" name="name" style="color:white;">
+      </div>
+      <div class="form-field">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+      </div>
+      <div class="form-field">
+        {{ form.email.label_tag }}
+        <input type="email" name="email" style="color:white;">
+      </div>
+      <div class="form-field">
+        {{ form.password1.label_tag }}
+        <input type="password" name="password1" style="color:white;">
+      </div>
+      <div class="form-field">
+        {{ form.password2.label_tag }}
+        <input type="password" name="password2" style="color:white;">
+      </div>
+      <button type="submit" class="sp-btn sp-btn-primary" style="margin-top:6px;">
+        <i class="mdi mdi-account-plus"></i> Add Supervisor
+      </button>
+    </form>
+  </div>
+
+  <!-- Staff Table -->
+  <div class="sp-card">
+    <div class="sp-card-title">Current Staff</div>
+    {% if not data %}
+      <div class="sp-empty">
+        <i class="mdi mdi-account-off"></i>
+        <p>No staff members added yet.</p>
+      </div>
+    {% else %}
+    <div class="sp-table-wrap">
+      <table class="sp-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in data %}
+          <tr>
+            <td><strong>{{ i.staff.first_name }}</strong></td>
+            <td>{{ i.staff.username }}</td>
+            <td style="color:var(--text-muted);">{{ i.staff.email }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,252 @@
+{% extends 'user/shared/base.html' %}
+{% load static %}
+{% block name %}{{ uname }}{% endblock name %}
+
+{% block styles %}
+<style>
+  .hero-banner {
+    position: relative;
+    background: linear-gradient(135deg, #0d1a3a 0%, #0a2040 40%, #04142a 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 40px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0,229,192,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 400px; height: 200px;
+    background: radial-gradient(ellipse, rgba(79,141,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 3px 1fr;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-divider { background: var(--border); height: 60px; margin: 0 28px; }
+  .hero-welcome {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 6px;
+  }
+  .hero-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.1;
+  }
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+  .hero-action {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .stat-card:hover {
+    border-color: rgba(0,229,192,0.3);
+    transform: translateY(-2px);
+  }
+  .stat-card .stat-glow {
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .stat-card.teal .stat-glow { background: radial-gradient(circle, rgba(0,229,192,0.15) 0%, transparent 70%); }
+  .stat-card.blue .stat-glow { background: radial-gradient(circle, rgba(79,141,255,0.15) 0%, transparent 70%); }
+  .stat-card .stat-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+  .stat-card.teal .stat-icon { background: rgba(0,229,192,0.12); color: var(--teal); }
+  .stat-card.blue .stat-icon { background: rgba(79,141,255,0.12); color: var(--accent); }
+  .stat-card .stat-value {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+  }
+  .stat-card.teal .stat-value { color: var(--teal); }
+  .stat-card.blue .stat-value { color: var(--accent); }
+  .stat-card .stat-label {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .stat-card .stat-link {
+    position: absolute;
+    bottom: 18px; right: 18px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.18s;
+  }
+  .stat-card .stat-link:hover { background: rgba(0,229,192,0.15); color: var(--teal); }
+
+  .quick-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .quick-link-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--text-main);
+    transition: all 0.18s;
+  }
+  .quick-link-card:hover {
+    border-color: rgba(0,229,192,0.3);
+    background: rgba(0,229,192,0.05);
+    color: var(--teal);
+    transform: translateX(4px);
+  }
+  .quick-link-card .ql-icon {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    background: rgba(0,229,192,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    color: var(--teal);
+    flex-shrink: 0;
+  }
+  .quick-link-card .ql-text strong {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .quick-link-card .ql-text span {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .section-heading {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<div class="hero-banner">
+  <div class="hero-welcome">Welcome Back</div>
+  <div class="hero-name">{{ uname }}</div>
+  <div class="hero-sub">Manage your parking slots and bookings from your dashboard.</div>
+  <div class="hero-action">
+    <a href="{% url 'available_slots' %}" class="sp-btn sp-btn-primary">
+      <i class="mdi mdi-parking"></i> Find Parking
+    </a>
+    <a href="{% url 'upcomming_booking' %}" class="sp-btn" style="background:rgba(79,141,255,0.1);color:var(--accent);border:1px solid rgba(79,141,255,0.25);">
+      <i class="mdi mdi-calendar-clock"></i> My Bookings
+    </a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stat-grid">
+  <div class="stat-card teal">
+    <div class="stat-glow"></div>
+    <div class="stat-icon"><i class="mdi mdi-wallet"></i></div>
+    <div class="stat-value">{{ balance }} ₹</div>
+    <div class="stat-label">Account Balance</div>
+    <a href="{% url 'paynow' %}" class="stat-link"><i class="mdi mdi-arrow-right"></i></a>
+  </div>
+  <div class="stat-card blue">
+    <div class="stat-glow"></div>
+    <div class="stat-icon"><i class="mdi mdi-ticket-confirmation"></i></div>
+    <div class="stat-value">{{ count }}</div>
+    <div class="stat-label">Total Bookings</div>
+    <a href="{% url 'upcomming_booking' %}" class="stat-link"><i class="mdi mdi-arrow-right"></i></a>
+  </div>
+</div>
+
+<!-- Quick Links -->
+<div class="section-heading">Quick Access</div>
+<div class="quick-links">
+  <a href="{% url 'available_slots' %}" class="quick-link-card">
+    <div class="ql-icon"><i class="mdi mdi-map-marker"></i></div>
+    <div class="ql-text">
+      <strong>View Slots</strong>
+      <span>Browse available parking</span>
+    </div>
+  </a>
+  <a href="{% url 'paynow' %}" class="quick-link-card">
+    <div class="ql-icon"><i class="mdi mdi-credit-card"></i></div>
+    <div class="ql-text">
+      <strong>Recharge Wallet</strong>
+      <span>Add funds to your account</span>
+    </div>
+  </a>
+  <a href="{% url 'upcomming_booking' %}" class="quick-link-card">
+    <div class="ql-icon"><i class="mdi mdi-calendar-check"></i></div>
+    <div class="ql-text">
+      <strong>Upcoming Bookings</strong>
+      <span>View active reservations</span>
+    </div>
+  </a>
+  <a href="{% url 'my_booking_history' %}" class="quick-link-card">
+    <div class="ql-icon"><i class="mdi mdi-history"></i></div>
+    <div class="ql-text">
+      <strong>Booking History</strong>
+      <span>Past parking sessions</span>
+    </div>
+  </a>
+</div>
+{% endblock content %}

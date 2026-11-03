@@ -1,0 +1,85 @@
+{% extends 'admin/shared/base.html' %}
+{% load static %}
+
+{% block styles %}
+<style>
+  .hero-banner {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #0d1a3a 0%, #09183a 60%, #04111e 100%);
+    border: 1px solid var(--border); border-radius: 14px;
+    padding: 36px 40px; margin-bottom: 26px;
+  }
+  .hero-banner::before {
+    content: ''; position: absolute; top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,107,53,0.13) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-banner::after {
+    content: ''; position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,229,192,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,192,0.03) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none;
+  }
+  .hero-tag { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--warn); margin-bottom: 6px; position: relative; z-index: 1; }
+  .hero-banner h1 { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; color: var(--text-main); position: relative; z-index: 1; margin-bottom: 4px; }
+  .hero-sub { color: var(--text-muted); font-size: 13px; position: relative; z-index: 1; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .stat-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px; position: relative; overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .stat-card:hover { border-color: rgba(0,229,192,0.28); transform: translateY(-2px); }
+  .stat-glow {
+    position: absolute; top: -40px; right: -40px;
+    width: 130px; height: 130px; border-radius: 50%; pointer-events: none;
+  }
+  .stat-card.teal .stat-glow { background: radial-gradient(circle, rgba(0,229,192,0.14) 0%, transparent 70%); }
+  .stat-card.orange .stat-glow { background: radial-gradient(circle, rgba(255,107,53,0.14) 0%, transparent 70%); }
+  .stat-icon {
+    width: 40px; height: 40px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; margin-bottom: 14px;
+  }
+  .stat-card.teal .stat-icon { background: rgba(0,229,192,0.11); color: var(--teal); }
+  .stat-card.orange .stat-icon { background: rgba(255,107,53,0.11); color: var(--warn); }
+  .stat-value { font-family: 'Rajdhani', sans-serif; font-size: 38px; font-weight: 700; line-height: 1; }
+  .stat-card.teal .stat-value { color: var(--teal); }
+  .stat-card.orange .stat-value { color: var(--warn); }
+  .stat-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-top: 5px; }
+  .stat-link {
+    position: absolute; bottom: 16px; right: 16px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all 0.16s;
+  }
+  .stat-card:hover .stat-link { background: rgba(0,229,192,0.14); color: var(--teal); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-banner">
+  <div class="hero-tag">System Overview</div>
+  <h1>Welcome, Administrator</h1>
+  <p class="hero-sub">Manage users, malls, and locations from this panel.</p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card teal">
+    <div class="stat-glow"></div>
+    <div class="stat-icon"><i class="mdi mdi-account-group"></i></div>
+    <div class="stat-value">{{ user_count }}</div>
+    <div class="stat-label">Registered Users</div>
+    <a href="{% url 'view_users' %}" class="stat-link"><i class="mdi mdi-arrow-right"></i></a>
+  </div>
+  <div class="stat-card orange">
+    <div class="stat-glow"></div>
+    <div class="stat-icon"><i class="mdi mdi-store"></i></div>
+    <div class="stat-value">{{ mall_count }}</div>
+    <div class="stat-label">Active Malls</div>
+    <a href="{% url 'view_malls' %}" class="stat-link"><i class="mdi mdi-arrow-right"></i></a>
+  </div>
+</div>
+{% endblock content %}

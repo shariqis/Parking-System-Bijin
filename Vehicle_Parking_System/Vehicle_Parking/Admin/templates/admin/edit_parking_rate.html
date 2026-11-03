@@ -1,0 +1,39 @@
+{% extends 'mall/shared/base.html' %}
+{% load static %}
+{% block name %}{{ uname }}{% endblock name %}
+{% block content %}
+<div class="sp-page-header">
+  <h1>Edit Parking Rate</h1>
+  <div class="sp-header-line"></div>
+</div>
+<div style="max-width:520px;">
+  <div class="sp-card">
+    <div class="sp-card-title">Rate #{{ slot.slot_number }}</div>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-field">
+        {{ form.vehicle_type.label_tag }}
+        {{ form.vehicle_type }}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="form-field">
+          {{ form.rate_per_hour.label_tag }}
+          {{ form.rate_per_hour }}
+        </div>
+        <div class="form-field">
+          {{ form.rate_per_day.label_tag }}
+          {{ form.rate_per_day }}
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button type="submit" class="sp-btn sp-btn-primary">
+          <i class="mdi mdi-content-save"></i> Save Changes
+        </button>
+        <a href="{% url 'view_parking_rates' %}" class="sp-btn sp-btn-secondary">
+          <i class="mdi mdi-close"></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
